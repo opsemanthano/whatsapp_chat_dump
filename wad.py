@@ -1,3 +1,8 @@
+# encoding=utf8
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 """                 _               
                 | |              
  _ _ _ _____  __| |  ____  _   _ 
@@ -37,6 +42,10 @@ import pandas as pd
 import sqlite3, os
 from datetime import datetime
 from yattag import Doc
+
+import six
+if six.PY2:
+ FileNotFoundError = EnvironmentError
 
 
 ##############################
@@ -121,13 +130,13 @@ def dump_chats(output, sid):
     try:
         if sid:
             for s in sid:
-                with open(output + '\\' + chat_list['ZPARTNERNAME'][chat_list.Z_PK == int(s)].iloc[0] + ' (' + chat_list['ZCONTACTJID'][chat_list.Z_PK == int(s)].iloc[0].split('@')[0] + ')' + '.html', 'w+', encoding='utf-8') as c:
+                with open(output + '\\' + chat_list['ZPARTNERNAME'][chat_list.Z_PK == int(s)].iloc[0] + ' (' + chat_list['ZCONTACTJID'][chat_list.Z_PK == int(s)].iloc[0].split('@')[0] + ')' + '.html', 'w+' ) as c:
                     c.write(generate_html(get_df_by_sid(df, int(s))))
                 print('Exported chat ' + str(sid.index(s)+1) + '/' + str(len(sid)))
         else:
             for index, row in chat_list.iterrows():
                 try:
-                    with open(output + '\\' + row['ZPARTNERNAME'] + ' (' + row['ZCONTACTJID'].split('@')[0] + ')' + '.html', 'w+', encoding='utf-8') as c:
+                    with open(output + '\\' + row['ZPARTNERNAME'] + ' (' + row['ZCONTACTJID'].split('@')[0] + ')' + '.html', 'w+') as c:
                         c.write(generate_html(get_df_by_sid(df, row['Z_PK'])))
                 except KeyError:
                     print('Skipped chat #' + str(index+1) + ' (' + str(row['ZPARTNERNAME']) + ')')
